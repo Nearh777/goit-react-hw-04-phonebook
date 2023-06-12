@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { nanoid } from 'nanoid';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { ContactForm } from './Form/ContactForm';
 import { ContactList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
@@ -8,9 +8,61 @@ import { ContainerApp, Title, TitleCont } from './App.styled';
 
 
 
-export default function App() {
+export const App = ({number}) => {
 const [contacts, setContacs] = useState([]);
 const [filter, setFilter] = useState('');
+
+const addContact = (name, number) => {
+        const newContact = {
+        id: nanoid(),
+        name,
+        number,
+      };
+      setContacs([...contacts, newContact])
+      
+    };
+
+const deleteContact = contactId => {
+  setFilter(contactId)
+  setFilter((prev) => {
+    return !prev;
+  })
+    
+  };
+
+const  changeFilter = e => {setFilter({ filter: e.target.value })
+    
+  };
+
+const  getVisibleContact = () => {
+    
+    const normalizedFilter = filter.toLowerCase();
+
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedFilter)
+    );
+  };
+
+// const  componentDidMount() {
+//     const contacts = localStorage.getItem('contacts');
+//     const parsedContacts = JSON.parse(contacts);
+    
+//     if (parsedContacts){
+//       this.setState({contacts: parsedContacts});
+//     }
+    
+//   }
+
+// const  componentDidUpdate(prevProps, prevState) {
+//     if (this.state.contacts !== prevState.contacts) {
+//       localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+//     }
+//   }
+
+
+
+  
+
 
 return (
         <ContainerApp>
@@ -18,16 +70,16 @@ return (
   
           <ContactForm
             contacts={contacts}
-            addContact={this.addContact}
+            addContact={addContact}
             number={number}
           />
   
           <TitleCont>Contacts:</TitleCont>
-          <Filter value={filter} onChange={this.changeFilter} />
+          <Filter value={filter} onChange={changeFilter} />
   
           <ContactList
-            contacts={filteredContacts}
-            onDeleteContatct={this.deleteContact}
+            contacts={getVisibleContact}
+            onDeleteContatct={deleteContact}
           />
         </ContainerApp>
       );
@@ -118,7 +170,7 @@ return (
 // )
 
 
-propTypes = {
-  contacts: PropTypes.arrayOf(PropTypes.string),
-  filter: PropTypes.string,
-};
+// propTypes = {
+//   contacts: PropTypes.arrayOf(PropTypes.string),
+//   filter: PropTypes.string,
+// };

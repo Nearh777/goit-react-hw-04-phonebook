@@ -1,23 +1,26 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { Form, Input, BtnForm, Title } from './ContactForm.styled';
 
 
 
-export default ContactForm({addContact}) {
+export const ContactForm = ({addContact, contacts}) => {
 const [name, setName] = useState('');
 const [number, setNumber] = useState('');
 
 
-  const handleChange = e => setName(e.target.value);
+  const handleChange = ({target: {value, name}}) => {
+    if(name === 'name')setName(value);
+    if(name === 'number')setNumber(value)
+  };
 
   const handleSubmat = e => {
     e.preventDefault();
-    
-    const { contacts } = this.props;
-    if (name.trim() === '' || number.trim() === '') {
+
+    if (setName.trim() === '' || setNumber.trim() === '') {
       return;
     }
+
     const existingContact = contacts.find(
       contact => contact.name.toLowerCase() === name.toLowerCase()
     )
@@ -31,10 +34,6 @@ const [number, setNumber] = useState('');
     
   };
   
-  
-
-
-
   return(
     <Form onSubmit={handleSubmat}>
       <Input 
@@ -135,8 +134,8 @@ const [number, setNumber] = useState('');
 
 
 
-propTypes = {
-  name: PropTypes.string,
-  number: PropTypes.string,
+// propTypes = {
+//   name: PropTypes.string,
+//   number: PropTypes.string,
 
-};
+// };

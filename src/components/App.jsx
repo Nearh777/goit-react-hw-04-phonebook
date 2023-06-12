@@ -1,93 +1,81 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 // import PropTypes from 'prop-types';
 import { ContactForm } from './Form/ContactForm';
 import { ContactList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
 import { ContainerApp, Title, TitleCont } from './App.styled';
 
+const CONTACTS_KEY = 'contacts';
 
+export const App = () => {
+  const parsContacts = JSON.parse(localStorage.getItem(CONTACTS_KEY));
+  const [contacts, setContacts] = useState(
+    () =>
+      parsContacts ?? [ ]
+  );
+  const [filter, setFilter] = useState('');
 
-export const App = ({number}) => {
-const [contacts, setContacs] = useState([]);
-const [filter, setFilter] = useState('');
+  useEffect(() => {
+    localStorage.setItem(CONTACTS_KEY, JSON.stringify(contacts));
+  }, [contacts]);
 
-const addContact = (name, number) => {
-        const newContact = {
-        id: nanoid(),
-        name,
-        number,
-      };
-      setContacs([...contacts, newContact])
-      
+  const addContact = contact => {
+    const newContact = {
+      id: nanoid(),
+      name: contact.name,
+      number: contact.number,
     };
 
-const deleteContact = contactId => {
-  setFilter(contactId)
-  setFilter((prev) => {
-    return !prev;
-  })
-    
+    if (contacts.some(e => e.name === contact.name)) {
+      toast.info(`${contact.name} Контакт з таким ім'ям вже існує.`);
+    } else {
+      toast.success(`${contact.name} додано до контактів.`);
+      return setContacts(prevState => [newContact, ...prevState]);
+    }
   };
 
-const  changeFilter = e => {setFilter({ filter: e.target.value })
-    
+  const changeFilter = e => {
+    setFilter({ filter: e.target.value });
+    if (e.target.value.length > 0) {
+      toast.warn(`Для запиту знайдено наступні збіги " ${e.target.value} ".`);
+    }
   };
 
-const  getVisibleContact = () => {
-    
-    const normalizedFilter = filter.toLowerCase();
+  const getVisibleContact = contacts.filter(contact =>
+    contact.name.toLowerCase().includes(filter.toLowerCase())
+  );
 
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(normalizedFilter)
-    );
+  const deleteContact = (contactId, name) => {
+    setContacts(contacts.filter(contact => contact.id !== contactId));
+    toast.error(`${name} видалено з контактів.`);
   };
 
-// const  componentDidMount() {
-//     const contacts = localStorage.getItem('contacts');
-//     const parsedContacts = JSON.parse(contacts);
-    
-//     if (parsedContacts){
-//       this.setState({contacts: parsedContacts});
-//     }
-    
-//   }
+  return (
+    <ContainerApp>
+      <Title>Phonebook</Title>
 
-// const  componentDidUpdate(prevProps, prevState) {
-//     if (this.state.contacts !== prevState.contacts) {
-//       localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-//     }
-//   }
+      <ContactForm
+        addContact={addContact}
+        
+      />
+      <ToastContainer />
+      <TitleCont>Contacts:</TitleCont>
+      <Filter value={filter} onChange={changeFilter} />
 
-
-
-  
-
-
-return (
-        <ContainerApp>
-          <Title>Phonebook</Title>
-  
-          <ContactForm
-            contacts={contacts}
-            addContact={addContact}
-            number={number}
-          />
-  
-          <TitleCont>Contacts:</TitleCont>
-          <Filter value={filter} onChange={changeFilter} />
-  
-          <ContactList
-            contacts={getVisibleContact}
-            onDeleteContatct={deleteContact}
-          />
-        </ContainerApp>
-      );
-}
-
+      <ContactList
+        contacts={getVisibleContact}
+        onDeleteContatct={deleteContact}
+      />
+    </ContainerApp>
+  );
+};
 
 // export const App = ({number}) => (
-//   const 
+//   const
 
 //   state = {
 //     contacts: [],
@@ -128,11 +116,11 @@ return (
 //   componentDidMount() {
 //     const contacts = localStorage.getItem('contacts');
 //     const parsedContacts = JSON.parse(contacts);
-    
+
 //     if (parsedContacts){
 //       this.setState({contacts: parsedContacts});
 //     }
-    
+
 //   }
 
 //   componentDidUpdate(prevProps, prevState) {
@@ -168,7 +156,6 @@ return (
 //     );
 //   }
 // )
-
 
 // propTypes = {
 //   contacts: PropTypes.arrayOf(PropTypes.string),

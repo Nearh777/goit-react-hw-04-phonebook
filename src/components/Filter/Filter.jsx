@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 
 import {Input, ContainerFiltr, Label} from './Filter.styled'
 
@@ -16,3 +17,9 @@ Find contacts by name
    </ContainerFiltr>
        
 )
+
+
+Filter.propTypes = {
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+};

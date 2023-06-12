@@ -1,34 +1,37 @@
 import React, { useState } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { Form, Input, BtnForm, Title } from './ContactForm.styled';
 
 
 
-export const ContactForm = ({addContact, contacts}) => {
+export const ContactForm = ({addContact}) => {
 const [name, setName] = useState('');
 const [number, setNumber] = useState('');
 
 
-  const handleChange = ({target: {value, name}}) => {
-    if(name === 'name')setName(value);
-    if(name === 'number')setNumber(value)
+ 
+
+  const handleChange = e => {
+    const { name, value } = e.target;
+
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
+
+      case 'number':
+        setNumber(value);
+        break;
+
+      default:
+        return;
+    }
   };
+
 
   const handleSubmat = e => {
     e.preventDefault();
-
-    if (setName.trim() === '' || setNumber.trim() === '') {
-      return;
-    }
-
-    const existingContact = contacts.find(
-      contact => contact.name.toLowerCase() === name.toLowerCase()
-    )
-    if (existingContact) {
-      alert("Контакт з таким ім'ям вже існує.");
-      return;
-    }
-    addContact(name.trim(), number.trim());
+    addContact({ name, number });
     setName('');
     setNumber('');
     
@@ -61,6 +64,13 @@ const [number, setNumber] = useState('');
     </Form>
   );
 }
+
+
+ContactForm.propTypes = {
+  name: PropTypes.string,
+  number: PropTypes.string,
+
+};
 
 
 
@@ -130,12 +140,10 @@ const [number, setNumber] = useState('');
 //     );
 //   }
 // }
+ // const handleChange = ({target: {value, name}}) => {
+  //   if(name === 'name')setName(value);
+  //   if(name === 'number')setNumber(value)
+  // };
 
 
 
-
-// propTypes = {
-//   name: PropTypes.string,
-//   number: PropTypes.string,
-
-// };

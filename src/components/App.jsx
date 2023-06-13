@@ -30,7 +30,7 @@ export const App = () => {
       number: contact.number,
     };
 
-    if (contacts.some(e => e.name === contact.name)) {
+    if (contacts.some(e => e.name.toLowerCase() === contact.name.toLowerCase())) {
       toast.info(`${contact.name} Контакт з таким ім'ям вже існує.`);
     } else {
       toast.success(`${contact.name} додано до контактів.`);

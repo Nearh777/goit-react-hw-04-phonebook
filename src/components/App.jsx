@@ -46,7 +46,7 @@ export const App = () => {
   };
 
   const getVisibleContact = contacts.filter(contact =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
+    contact.name.includes(filter)
   );
 
   const deleteContact = (contactId, name) => {

@@ -3,11 +3,13 @@ import { nanoid } from 'nanoid';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { ContactForm } from './Form/ContactForm';
 import { ContactList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
 import { ContainerApp, Title, TitleCont } from './App.styled';
+
+
 
 const CONTACTS_KEY = 'contacts';
 
@@ -15,7 +17,9 @@ export const App = () => {
   const parsContacts = JSON.parse(localStorage.getItem(CONTACTS_KEY));
   const [contacts, setContacts] = useState(
     () =>
-      parsContacts ?? [ ]
+      parsContacts ?? [
+        
+      ]
   );
   const [filter, setFilter] = useState('');
 
@@ -25,12 +29,12 @@ export const App = () => {
 
   const addContact = contact => {
     const newContact = {
-      id: nanoid(),
       name: contact.name,
       number: contact.number,
+      id: nanoid(),
     };
 
-    if (contacts.some(e => e.name.toLowerCase() === contact.name.toLowerCase())) {
+    if (contacts.some(event => event.name.toLowerCase() === contact.name.toLowerCase())) {
       toast.info(`${contact.name} Контакт з таким ім'ям вже існує.`);
     } else {
       toast.success(`${contact.name} додано до контактів.`);
@@ -38,15 +42,17 @@ export const App = () => {
     }
   };
 
-  const changeFilter = e => {
-    setFilter({ filter: e.target.value });
-    if (e.target.value.length > 0) {
-      toast.warn(`Для запиту знайдено наступні збіги " ${e.target.value} ".`);
+  const changeFilter = event => {
+    setFilter(event.currentTarget.value);
+    if (event.currentTarget.value.length > 0) {
+      toast.warn(
+        `Для запиту знайдено наступні збіги  " ${event.currentTarget.value} ".`
+      );
     }
   };
 
   const getVisibleContact = contacts.filter(contact =>
-    contact.name.includes(filter)
+    contact.name.toLowerCase().includes(filter.toLowerCase())
   );
 
   const deleteContact = (contactId, name) => {
@@ -54,13 +60,14 @@ export const App = () => {
     toast.error(`${name} видалено з контактів.`);
   };
 
+
   return (
     <ContainerApp>
       <Title>Phonebook</Title>
 
       <ContactForm
         addContact={addContact}
-        
+
       />
       <ToastContainer />
       <TitleCont>Contacts:</TitleCont>
@@ -72,6 +79,11 @@ export const App = () => {
       />
     </ContainerApp>
   );
+};
+
+App.propTypes = {
+  contacts: PropTypes.arrayOf(PropTypes.string),
+  filter: PropTypes.string,
 };
 
 // export const App = ({number}) => (

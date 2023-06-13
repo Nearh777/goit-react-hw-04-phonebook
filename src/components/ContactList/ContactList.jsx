@@ -10,9 +10,9 @@ export const ContactList = ({ contacts, onDeleteContatct }) => {
     <List>
       {contacts.map(({ id, name, number }) => (
         <ListItem key={id}>
-          {name}: {number}          
+ {name + ': ' + number}          
           <BtnCont
-            onClick={() => onDeleteContatct(id)}
+            onClick={() => onDeleteContatct(id, name)}
             aria-label="Delete contact"
           >
             Delete
@@ -24,15 +24,16 @@ export const ContactList = ({ contacts, onDeleteContatct }) => {
 };
 
 
-ContactList.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    }).isRequired
-  ).isRequired,
+ContactList.prototype = {
+  contacts: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    number: PropTypes.string.isRequired,
+  }),
+  onDeleteContact: PropTypes.func.isRequired,
 };
+
+
 
 // export class ContactList extends Component {
 

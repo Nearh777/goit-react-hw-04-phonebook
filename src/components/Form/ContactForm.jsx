@@ -4,29 +4,30 @@ import { Form, Input, BtnForm, Title } from './ContactForm.styled';
 
 
 
-export const ContactForm = ({addContact}) => {
+export const ContactForm = ({addContact, contacts}) => {
 const [name, setName] = useState('');
 const [number, setNumber] = useState('');
 
 
- 
+const onChangeName = e => setName(e.currentTarget.value);
+const onChangeNunber = e => setNumber(e.currentTarget.value);
 
-  const handleChange = e => {
-    const { name, value } = e.target;
+  // const handleChange = e => {
+  //   const { name, value } = e.target;
 
-    switch (name) {
-      case 'name':
-        setName(value);
-        break;
+  //   switch (name) {
+  //     case 'name':
+  //       setName(value);
+  //       break;
 
-      case 'number':
-        setNumber(value);
-        break;
+  //     case 'number':
+  //       setNumber(value);
+  //       break;
 
-      default:
-        return;
-    }
-  };
+  //     default:
+  //       return;
+  //   }
+  // };
 
 
   const handleSubmat = e => {
@@ -46,7 +47,7 @@ const [number, setNumber] = useState('');
         title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
         required
         value={name}
-        onChange={handleChange}
+        onChange={onChangeName}
       />
       <Title>Number</Title>
       <Input 
@@ -56,7 +57,7 @@ const [number, setNumber] = useState('');
         title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
         required
         value={number}
-        onChange={handleChange}
+        onChange={onChangeNunber}
       />
       
 
@@ -64,6 +65,9 @@ const [number, setNumber] = useState('');
     </Form>
   );
 }
+
+
+
 
 
 ContactForm.propTypes = {
